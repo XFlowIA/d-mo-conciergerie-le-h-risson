@@ -6,167 +6,100 @@
   <title>Villa Les Embruns — Assistant IA</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #f0f2f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 16px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 16px;
     }
-
     .chat-wrap {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 480px;
-      height: 680px;
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
+      display: flex; flex-direction: column;
+      width: 100%; max-width: 480px; height: 680px;
+      background: #fff; border-radius: 20px; overflow: hidden;
       box-shadow: 0 8px 40px rgba(0,0,0,0.12);
     }
-
-    /* HEADER */
     .chat-header {
-      background: #1a6b4a;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      background: #1a6b4a; padding: 16px 18px;
+      display: flex; align-items: center; gap: 12px;
     }
     .chat-header-avatar {
-      width: 42px; height: 42px;
-      border-radius: 50%;
+      width: 42px; height: 42px; border-radius: 50%;
       background: rgba(255,255,255,0.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: white; font-weight: 600;
-      flex-shrink: 0;
+      font-size: 16px; color: white; font-weight: 600; flex-shrink: 0;
     }
     .chat-header-info { flex: 1; }
     .chat-header-name { color: white; font-weight: 600; font-size: 15px; }
     .chat-header-status { color: rgba(255,255,255,0.75); font-size: 12px; margin-top: 2px; }
     .chat-header-badge {
-      background: rgba(255,255,255,0.15);
-      color: white; font-size: 11px;
+      background: rgba(255,255,255,0.15); color: white; font-size: 11px;
       padding: 4px 10px; border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.3);
-      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.3); white-space: nowrap;
     }
-
-    /* SCENARIO BAR */
     .scenario-bar {
-      padding: 10px 14px;
-      background: #f8f9fa;
+      padding: 10px 14px; background: #f8f9fa;
       border-bottom: 1px solid #e9ecef;
       display: flex; align-items: center; gap: 8px;
     }
     .scenario-label { font-size: 11px; color: #888; white-space: nowrap; }
     .scenario-select {
-      flex: 1; font-size: 12px;
-      border: 1px solid #dee2e6;
+      flex: 1; font-size: 12px; border: 1px solid #dee2e6;
       border-radius: 6px; padding: 5px 8px;
-      background: white; color: #333; outline: none;
-      cursor: pointer;
+      background: white; color: #333; outline: none; cursor: pointer;
     }
-
-    /* MESSAGES */
     .chat-messages {
-      flex: 1; overflow-y: auto;
-      padding: 16px;
+      flex: 1; overflow-y: auto; padding: 16px;
       display: flex; flex-direction: column; gap: 12px;
       background: #f0f2f5;
     }
     .msg { display: flex; flex-direction: column; max-width: 80%; }
     .msg.user { align-self: flex-end; align-items: flex-end; }
     .msg.bot  { align-self: flex-start; align-items: flex-start; }
-
-    .msg-bubble {
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 14px; line-height: 1.5;
-    }
-    .msg.user .msg-bubble {
-      background: #1a6b4a; color: white;
-      border-bottom-right-radius: 4px;
-    }
+    .msg-bubble { padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
+    .msg.user .msg-bubble { background: #1a6b4a; color: white; border-bottom-right-radius: 4px; }
     .msg.bot .msg-bubble {
-      background: white; color: #222;
-      border: 1px solid #e9ecef;
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      background: white; color: #222; border: 1px solid #e9ecef;
+      border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .msg-time {
-      font-size: 11px; color: #aaa;
-      margin-top: 4px; padding: 0 4px;
-    }
-
-    /* TYPING */
+    .msg-time { font-size: 11px; color: #aaa; margin-top: 4px; padding: 0 4px; }
     .typing {
-      display: flex; align-items: center; gap: 5px;
-      padding: 12px 16px;
+      display: flex; align-items: center; gap: 5px; padding: 12px 16px;
       background: white; border: 1px solid #e9ecef;
-      border-radius: 18px; border-bottom-left-radius: 4px;
-      width: fit-content;
+      border-radius: 18px; border-bottom-left-radius: 4px; width: fit-content;
       box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #aaa;
-      animation: bounce 1.2s infinite;
-    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #aaa; animation: bounce 1.2s infinite; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%,60%,100% { transform: translateY(0); }
-      30% { transform: translateY(-7px); }
-    }
-
-    /* QUICK BUTTONS */
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
     .quick-btns {
-      display: flex; gap: 8px;
-      padding: 8px 14px 10px;
+      display: flex; gap: 8px; padding: 8px 14px 10px;
       overflow-x: auto; scrollbar-width: none;
-      background: white;
-      border-top: 1px solid #f0f0f0;
+      background: white; border-top: 1px solid #f0f0f0;
     }
     .quick-btns::-webkit-scrollbar { display: none; }
     .quick-btn {
-      white-space: nowrap; font-size: 12px;
-      padding: 6px 14px; border-radius: 20px;
-      border: 1px solid #dee2e6;
-      background: #f8f9fa; color: #555;
-      cursor: pointer; flex-shrink: 0;
-      transition: all 0.15s;
+      white-space: nowrap; font-size: 12px; padding: 6px 14px;
+      border-radius: 20px; border: 1px solid #dee2e6;
+      background: #f8f9fa; color: #555; cursor: pointer;
+      flex-shrink: 0; transition: all 0.15s;
     }
     .quick-btn:hover { border-color: #1a6b4a; color: #1a6b4a; background: #f0faf5; }
-
-    /* INPUT */
     .chat-input-area {
-      padding: 10px 14px 14px;
-      border-top: 1px solid #e9ecef;
-      background: white;
-      display: flex; gap: 10px; align-items: flex-end;
+      padding: 10px 14px 14px; border-top: 1px solid #e9ecef;
+      background: white; display: flex; gap: 10px; align-items: flex-end;
     }
     .chat-input {
-      flex: 1;
-      border: 1px solid #dee2e6;
-      border-radius: 22px;
-      padding: 10px 16px;
-      font-size: 14px; resize: none; outline: none;
-      background: #f8f9fa; color: #222;
-      font-family: inherit; line-height: 1.4;
-      max-height: 100px;
-      transition: border-color 0.15s;
+      flex: 1; border: 1px solid #dee2e6; border-radius: 22px;
+      padding: 10px 16px; font-size: 14px; resize: none; outline: none;
+      background: #f8f9fa; color: #222; font-family: inherit;
+      line-height: 1.4; max-height: 100px; transition: border-color 0.15s;
     }
     .chat-input:focus { border-color: #1a6b4a; background: white; }
     .send-btn {
       width: 42px; height: 42px; border-radius: 50%;
-      background: #1a6b4a; border: none;
-      cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
+      background: #1a6b4a; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; transition: opacity 0.15s;
       box-shadow: 0 2px 8px rgba(26,107,74,0.3);
     }
@@ -176,9 +109,7 @@
   </style>
 </head>
 <body>
-
 <div class="chat-wrap">
-
   <div class="chat-header">
     <div class="chat-header-avatar">VE</div>
     <div class="chat-header-info">
@@ -224,19 +155,18 @@
       <svg class="send-icon" viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
     </button>
   </div>
-
 </div>
 
 <script>
-  const WEBHOOK = 'https://n8n.srv1384953.hstgr.cloud/webhook/0ae2d712-3ba0-40b5-8680-7a1aa2f6af38';
+  const WEBHOOK = 'https://n8n.srv1384953.hstgr.cloud/webhook/07680f4a-4948-4c52-80df-24aa479e68a0/chat';
 
   const scenarios = {
-    wifi:     "C'est quoi le code wifi s'il vous plaît ?",
-    checkin:  "Bonjour, à quelle heure on peut arriver ? Et comment on accède au logement ?",
-    chauffage:"Bonsoir, il fait très froid dans l'appartement, le chauffage ne semble pas fonctionner...",
-    imprevu:  "Bonjour, est-ce qu'il y a un fer à repasser dans le logement ?",
-    urgence:  "Urgence ! La machine à laver fuit, il y a de l'eau partout !",
-    english:  "Hi! What is the wifi password please?"
+    wifi:      "C'est quoi le code wifi s'il vous plaît ?",
+    checkin:   "Bonjour, à quelle heure on peut arriver ? Et comment on accède au logement ?",
+    chauffage: "Bonsoir, il fait très froid dans l'appartement, le chauffage ne semble pas fonctionner...",
+    imprevu:   "Bonjour, est-ce qu'il y a un fer à repasser dans le logement ?",
+    urgence:   "Urgence ! La machine à laver fuit, il y a de l'eau partout !",
+    english:   "Hi! What is the wifi password please?"
   };
 
   function getTime() {
@@ -267,6 +197,28 @@
     if (t) t.remove();
   }
 
+  async function send(text) {
+    const btn = document.getElementById('sendBtn');
+    btn.disabled = true;
+    addMsg(text, 'user');
+    showTyping();
+    try {
+      const res = await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatInput: text, sessionId: 'demo-session-1' })
+      });
+      const data = await res.json();
+      removeTyping();
+      const reply = data.output || data.text || data.message || data.response || data.chatInput || JSON.stringify(data);
+      addMsg(reply, 'bot');
+    } catch(e) {
+      removeTyping();
+      addMsg("Je rencontre un problème de connexion. Vérifiez que votre workflow n8n est bien activé.", 'bot');
+    }
+    btn.disabled = false;
+  }
+
   async function sendMessage() {
     const input = document.getElementById('msgInput');
     const text = input.value.trim();
@@ -277,28 +229,6 @@
   }
 
   async function sendQuick(text) { await send(text); }
-
-  async function send(text) {
-    const btn = document.getElementById('sendBtn');
-    btn.disabled = true;
-    addMsg(text, 'user');
-    showTyping();
-    try {
-      const res = await fetch(WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      const data = await res.json();
-      removeTyping();
-      const reply = data.output || data.text || data.message || data.response || JSON.stringify(data);
-      addMsg(reply, 'bot');
-    } catch(e) {
-      removeTyping();
-      addMsg("Je rencontre un problème de connexion. Vérifiez que votre workflow n8n est bien activé.", 'bot');
-    }
-    btn.disabled = false;
-  }
 
   function loadScenario() {
     const val = document.getElementById('scenarioSelect').value;
@@ -317,6 +247,5 @@
     el.style.height = Math.min(el.scrollHeight, 100) + 'px';
   }
 </script>
-
 </body>
 </html>
